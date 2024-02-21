@@ -1,0 +1,16 @@
+{
+  "name": "node-mysql-crud-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "db_connection.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql2": "^3.9.1"
+  }
+}
