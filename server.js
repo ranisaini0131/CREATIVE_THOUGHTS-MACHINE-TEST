@@ -1,14 +1,22 @@
 import express from "express"
+import bodyParser from "body-parser";
+import dotenv from 'dotenv'
+
 const app = express();
 
-const port = 8080;
+dotenv.config({
+    path: './env'
+})
 
+const port = 8000;
 
-//routes
-import { router } from "./crud/fetch.js"
-app.use("/fetch", router)
-app.use("/post", router)
-app.use("/patch", router)
+// Body parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//routing
+import userRouter from "./src/routes/user.routes.js"
+app.use("/users", userRouter);
 
 app.listen(port, () => {
     console.log(`Server is listening on ${port}`)
