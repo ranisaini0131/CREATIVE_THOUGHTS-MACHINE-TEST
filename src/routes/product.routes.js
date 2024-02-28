@@ -1,6 +1,6 @@
 import { Router } from "express";
-import uploads from '../middleware/upload';
-import { createProducts, deleteProduct, getAllProducts, updateProduct } from "../controller/product.controller.js"
+import { uploads } from "../middleware/multer.middleware.js"
+import { createProduct, deleteProduct, getAllProducts, updateProduct } from "../controller/product.controller.js"
 
 const router = Router()
 
@@ -11,7 +11,7 @@ router.post("/create-Product",
             maxCount: 10
         }
     ])
-    , createProducts)
+    , createProduct)
 
 router.get('/products', getAllProducts)
 

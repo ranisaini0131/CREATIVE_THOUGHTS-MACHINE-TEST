@@ -15,6 +15,4 @@ const addToCart = (req, res) => {
     });
 };
 
-export {
-    addToCart
-}
+export default addToCart

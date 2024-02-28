@@ -5,15 +5,8 @@ const connection = mysql2.createConnection({
     port: 3306,
     user: "root",
     password: "password",
-    database: "crud"
+    database: "mysql_crud"
 })
 
-connection.connect((err) => {
-    if (err) {
-        console.log("ERROR: ", err.message);
-    } else {
-        console.log("connection created with MySQL successfully!!!")
-    }
-})
 
 export default connection

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-
+import connection from "../../db_connection.js";
 // Signup endpoint
 const signupUser = async (req, res) => {
     const { username, email, password } = req.body;
@@ -10,7 +10,7 @@ const signupUser = async (req, res) => {
     }
 
     // Check if the email already exists
-    db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
+    connection.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
         if (err) {
             throw err;
         }
