@@ -5,8 +5,9 @@ import dotenv from 'dotenv'
 
 const app = express();
 
+
 dotenv.config({
-    path: './env'
+    path: './.env'
 })
 
 const port = 8080;
@@ -29,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 import userRouter from "./src/routes/user.routes.js"
 import productRouter from "./src/routes/product.routes.js"
 import cartRouter from "./src/controller/cart.controller.js"
+
 app.use("/users", userRouter);
 app.use("/products", productRouter)
 app.use("/cart", cartRouter)

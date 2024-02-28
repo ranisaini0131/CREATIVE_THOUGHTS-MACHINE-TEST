@@ -4,20 +4,13 @@ import { createProduct, deleteProduct, getAllProducts, updateProduct } from "../
 
 const router = Router()
 
-router.post("/create-Product",
-    uploads.fields([
-        {
-            name: "avatar",
-            maxCount: 10
-        }
-    ])
-    , createProduct)
+router.post("/create-Product", uploads.array("avatar", 10), createProduct)
 
-router.get('/products', getAllProducts)
+router.get('/allProducts', getAllProducts)
 
 router.patch("/updatedProducts", updateProduct)
 
-router.delete("/deletedProduct", deleteProduct)
+router.delete("/deletedProduct/:id", deleteProduct)
 
 
 

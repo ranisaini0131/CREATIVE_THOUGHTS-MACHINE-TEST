@@ -1,5 +1,8 @@
-import jwt from "jsonwebtoken"
 import connection from "../../db_connection.js";
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
+
+
 // Signup endpoint
 const signupUser = async (req, res) => {
     const { username, email, password } = req.body;
@@ -24,14 +27,15 @@ const signupUser = async (req, res) => {
 
 
         // Insert new user into the database
-        db.query('INSERT INTO users (username, email, hashedpassword) VALUES (?, ?, ?)', [username, email, hashedPassword], (err, result) => {
+        connection.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, hashedPassword], (err, result) => {
             if (err) {
                 throw err;
             }
             console.log('User registered');
             res.status(200).json({
                 status: "sucess",
-                message: 'User registered successfully'
+                message: 'User registered successfully',
+                user: username
             });
         });
     });
@@ -39,45 +43,59 @@ const signupUser = async (req, res) => {
 
 const loginUser = (req, res) => {
     const { email, password } = req.body;
+    console.log(req.body)
 
-    // Check if user exists with provided email and password
-    db.query('SELECT * FROM users WHERE email = ? AND password = ?', [email, password], async (err, results) => {
-        if (err) {
-            throw err;
-        }
+    if (email && password) {
+        connection.query('SELECT * FROM users WHERE email = ? ', [email], async (error, results) => {
 
-        if (results.length === 0) {
-            return res.status(401).json({ error: 'Invalid email or password' });
-        }
+            console.log(results, "50")
+            if (error) {
+                throw error;
+            }
 
-        const hashedPassword = results[0].password
-        const verifyPassword = await bcrypt.compare(password, hashedPassword)
+            if (results.length > 0) {
+                const hashedPassword = results[0].password;
+                const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
-        if (verifyPassword) {
-            //generate token
-            const token = jwt.sign(
-                {
-                    user: user,
-                    passowrd: req.body.passowrd
-                },
-                process.env.securitykey,
-                {
-                    expiresIn: "1h"
+                console.log(process.env.securitykey)
+                if (passwordMatch) {
+                    const token = jwt.sign(
+                        {
+                            id: results.id
+                        },
+                        process.env.securitykey,
+                        {
+                            expiresIn: "1h"
+                        }
+                    )
+
+                    res.status(200).json({
+                        status: "sucess",
+                        message: 'User login successfully',
+                        token: token
+                    });
+                } else {
+                    res.status(500).json({
+                        status: "failed",
+                        message: 'Password incorrect'
+                    });
                 }
-            )
-        }
 
-        // User found, return success response
-        console.log('User logged in');
-        res.status(200).json({
-            status: "success",
-            message: 'Login successful',
-            token: token
 
+            } else {
+                res.status(500).json({
+                    status: "failed",
+                    message: 'Invalid credentials'
+                });
+            }
+        })
+    } else {
+        res.status(500).json({
+            status: "failed",
+            message: 'Email or password not valid'
         });
-    });
+    }
 }
-
 
 export {
     signupUser,

@@ -1,3 +1,5 @@
+import connection from "../../db_connection.js";
+
 const addToCart = (req, res) => {
     const { userId, productId, quantity } = req.body;
 
